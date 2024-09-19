@@ -42,53 +42,64 @@ export function Summary() {
           </Button>
         </DialogTrigger>
       </div>
-      <div className="flex flex-col gap-3">
-        <Progress value={8} max={15}>
-          <ProgressIndicator style={{ width: `${completedPercentage}%` }} />
-        </Progress>
-        <div className="flex items-center justify-between text-xs text-zinc-400">
-          <span>
-            Você completou{' '}
-            <span className="text-zinc-100">{data?.completed}</span> de{' '}
-            <span className="text-zinc-100">{data?.total}</span> metas nessa
-            semana.
-          </span>
-          <span>{completedPercentage}%</span>
+      {data.completed === 0 ? (
+        <div className="flex flex-col gap-3 ">
+          <PendingGoals />
+          <span>Você ainda não completou nenhuma das suas metas 😓.</span>
         </div>
-      </div>
-      <Separator />
-      <PendingGoals />
-      <div className="flex flex-col gap-6">
-        <h2 className="text-xl font-medium">Sua semana</h2>
-        {Object.entries(data.goalsPerDay).map(([date, goals]) => {
-          const weekDay = dayjs(date).format('dddd');
-          const formattedDate = dayjs(date).format('D [de] MMMM');
-
-          return (
-            <div key={date} className="flex flex-col gap-4">
-              <h3 className="font-medium ">
-                <span className=" capitalize">{weekDay} </span>
-                <span className="text-zinc-400 text-xs">({formattedDate})</span>
-              </h3>
-              <ul className="flex flex-col gap-3">
-                {goals.map((goal) => {
-                  const time = dayjs(goal.completedAt).format('HH:mm');
-                  return (
-                    <li key={goal.id} className="flex items-center gap-2">
-                      <CheckCircle2 className="size-4 text-pink-500" />
-                      <span className=" text-sm first-line:text-zinc-400">
-                        Você completou{' '}
-                        <span className="text-zinc-100">{goal.title}</span> às{' '}
-                        <span className="text-zinc-100">{time}h</span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
+      ) : (
+        <>
+          <div className="flex flex-col gap-3">
+            <Progress value={8} max={15}>
+              <ProgressIndicator style={{ width: `${completedPercentage}%` }} />
+            </Progress>
+            <div className="flex items-center justify-between text-xs text-zinc-400">
+              <span>
+                Você completou{' '}
+                <span className="text-zinc-100">{data?.completed}</span> de{' '}
+                <span className="text-zinc-100">{data?.total}</span> metas nessa
+                semana.
+              </span>
+              <span>{completedPercentage}%</span>
             </div>
-          );
-        })}
-      </div>
+          </div>
+          <Separator />
+          <PendingGoals />
+          <div className="flex flex-col gap-6">
+            <h2 className="text-xl font-medium">Sua semana</h2>
+            {Object.entries(data.goalsPerDay).map(([date, goals]) => {
+              const weekDay = dayjs(date).format('dddd');
+              const formattedDate = dayjs(date).format('D [de] MMMM');
+
+              return (
+                <div key={date} className="flex flex-col gap-4">
+                  <h3 className="font-medium ">
+                    <span className=" capitalize">{weekDay} </span>
+                    <span className="text-zinc-400 text-xs">
+                      ({formattedDate})
+                    </span>
+                  </h3>
+                  <ul className="flex flex-col gap-3">
+                    {goals.map((goal) => {
+                      const time = dayjs(goal.completedAt).format('HH:mm');
+                      return (
+                        <li key={goal.id} className="flex items-center gap-2">
+                          <CheckCircle2 className="size-4 text-pink-500" />
+                          <span className=" text-sm first-line:text-zinc-400">
+                            Você completou{' '}
+                            <span className="text-zinc-100">{goal.title}</span>{' '}
+                            às <span className="text-zinc-100">{time}h</span>
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
